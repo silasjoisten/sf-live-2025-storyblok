@@ -1,0 +1,257 @@
+diff --git a/src/Domain/Entity/Author.php b/src/Domain/Entity/Author.php
+new file mode 100644
+index 0000000..47ac160
+--- /dev/null
++++ b/src/Domain/Entity/Author.php
+@@ -0,0 +1,22 @@
++<?php
++
++namespace App\Domain\Entity;
++
++use App\Domain\Value\Id\AuthorId;
++use App\Domain\Value\Social;
++
++final readonly class Author
++{
++    public AuthorId $id;
++    public string $name;
++    public string $bio;
++    public array $socials;
++
++    public function __construct(array $values)
++    {
++        $this->id =  new AuthorId($values['id']);
++        $this->name =  $values['name'];
++        $this->bio = $values['bio'];
++        $this->socials = \array_map(static fn() => new Social($values), $values['socials']);
++    }
++}
+diff --git a/src/Domain/Entity/Category.php b/src/Domain/Entity/Category.php
+new file mode 100644
+index 0000000..0fef256
+--- /dev/null
++++ b/src/Domain/Entity/Category.php
+@@ -0,0 +1,23 @@
++<?php
++
++namespace App\Domain\Entity;
++
++use App\Domain\Value\Description;
++use App\Domain\Value\Id\CategoryId;
++use App\Domain\Value\Title;
++
++final readonly class Category
++{
++    public CategoryId $id;
++    public string $name;
++    public Title $title;
++    public Description $description;
++
++    public function __construct(array $values)
++    {
++        $this->id = new CategoryId($values['id']);
++        $this->name =  $values['name'];
++        $this->title =  $values['title'];
++        $this->description =  $values['description'];
++    }
++}
+diff --git a/src/Domain/Entity/Post.php b/src/Domain/Entity/Post.php
+new file mode 100644
+index 0000000..812b7cf
+--- /dev/null
++++ b/src/Domain/Entity/Post.php
+@@ -0,0 +1,29 @@
++<?php
++
++namespace App\Domain\Entity;
++
++use App\Domain\Value\Description;
++use App\Domain\Value\HtmlContent;
++use App\Domain\Value\Id\PostId;
++use App\Domain\Value\Image;
++use App\Domain\Value\Title;
++
++final readonly class Post
++{
++    public PostId $id;
++    public Title $title;
++    public Description $description;
++    public Image $image;
++    public Author $author;
++    public HtmlContent $content;
++
++    public function __construct(array $values)
++    {
++        $this->id = new PostId($values['id']);
++        $this->title =  new Title($values['title']);
++        $this->description = new Description($values['description']);
++        $this->image = new Image($values['image']['url'], $values['image']['alt']);
++        $this->author = new Author($values['author']);
++        $this->content = new HtmlContent($values['content']);
++    }
++}
+diff --git a/src/Domain/Value/Description.php b/src/Domain/Value/Description.php
+new file mode 100644
+index 0000000..26b5d68
+--- /dev/null
++++ b/src/Domain/Value/Description.php
+@@ -0,0 +1,13 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value;
++
++final readonly class Description
++{
++    public function __construct(
++        public string $value,
++    ) {
++    }
++}
+diff --git a/src/Domain/Value/HtmlContent.php b/src/Domain/Value/HtmlContent.php
+new file mode 100644
+index 0000000..ea3cb91
+--- /dev/null
++++ b/src/Domain/Value/HtmlContent.php
+@@ -0,0 +1,13 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value;
++
++final readonly class HtmlContent
++{
++    public function __construct(
++        public string $value,
++    ) {
++    }
++}
+diff --git a/src/Domain/Value/Id/AuthorId.php b/src/Domain/Value/Id/AuthorId.php
+new file mode 100644
+index 0000000..f53d785
+--- /dev/null
++++ b/src/Domain/Value/Id/AuthorId.php
+@@ -0,0 +1,9 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value\Id;
++
++final readonly class AuthorId
++{
++}
+diff --git a/src/Domain/Value/Id/CategoryId.php b/src/Domain/Value/Id/CategoryId.php
+new file mode 100644
+index 0000000..f5792b2
+--- /dev/null
++++ b/src/Domain/Value/Id/CategoryId.php
+@@ -0,0 +1,9 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value\Id;
++
++final readonly class CategoryId extends Id
++{
++}
+diff --git a/src/Domain/Value/Id/Id.php b/src/Domain/Value/Id/Id.php
+new file mode 100644
+index 0000000..aea2248
+--- /dev/null
++++ b/src/Domain/Value/Id/Id.php
+@@ -0,0 +1,13 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value\Id;
++
++abstract readonly class Id
++{
++    public function __construct(
++        public int $value,
++    ) {
++    }
++}
+diff --git a/src/Domain/Value/Id/PostId.php b/src/Domain/Value/Id/PostId.php
+new file mode 100644
+index 0000000..b13cf89
+--- /dev/null
++++ b/src/Domain/Value/Id/PostId.php
+@@ -0,0 +1,9 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value\Id;
++
++final readonly class PostId extends Id
++{
++}
+diff --git a/src/Domain/Value/Image.php b/src/Domain/Value/Image.php
+new file mode 100644
+index 0000000..83d094f
+--- /dev/null
++++ b/src/Domain/Value/Image.php
+@@ -0,0 +1,14 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value;
++
++final readonly class Image
++{
++    public function __construct(
++        public string $url,
++        public string $alt,
++    ) {
++    }
++}
+diff --git a/src/Domain/Value/Social.php b/src/Domain/Value/Social.php
+new file mode 100644
+index 0000000..ce1b9d2
+--- /dev/null
++++ b/src/Domain/Value/Social.php
+@@ -0,0 +1,18 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value;
++
++final readonly class Social
++{
++    public string $icon;
++    public string $name;
++
++    public function __construct(
++        array $values,
++    ) {
++        $this->icon =  $values['icon'];
++        $this->name = $values['name'];
++    }
++}
+diff --git a/src/Domain/Value/Title.php b/src/Domain/Value/Title.php
+new file mode 100644
+index 0000000..9bb4490
+--- /dev/null
++++ b/src/Domain/Value/Title.php
+@@ -0,0 +1,13 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Domain\Value;
++
++final readonly class Title
++{
++    public function __construct(
++        public string $value,
++    ) {
++    }
++}
