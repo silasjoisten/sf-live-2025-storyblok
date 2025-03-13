@@ -1,10 +1,12 @@
 diff --git a/src/Domain/Entity/Author.php b/src/Domain/Entity/Author.php
 new file mode 100644
-index 0000000..47ac160
+index 0000000..e975093
 --- /dev/null
 +++ b/src/Domain/Entity/Author.php
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,27 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace App\Domain\Entity;
 +
@@ -23,16 +25,21 @@ index 0000000..47ac160
 +        $this->id =  new AuthorId($values['id']);
 +        $this->name =  $values['name'];
 +        $this->bio = $values['bio'];
-+        $this->socials = \array_map(static fn() => new Social($values), $values['socials']);
++        $this->socials = \array_map(
++            static fn(array $social) => new Social($social['icon'], $social['name']),
++            $values['socials'],
++        );
 +    }
 +}
 diff --git a/src/Domain/Entity/Category.php b/src/Domain/Entity/Category.php
 new file mode 100644
-index 0000000..0fef256
+index 0000000..4fb6ad9
 --- /dev/null
 +++ b/src/Domain/Entity/Category.php
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,25 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace App\Domain\Entity;
 +
@@ -51,17 +58,19 @@ index 0000000..0fef256
 +    {
 +        $this->id = new CategoryId($values['id']);
 +        $this->name =  $values['name'];
-+        $this->title =  $values['title'];
-+        $this->description =  $values['description'];
++        $this->title =  new Title($values['title']);
++        $this->description =  new Description($values['description']);
 +    }
 +}
 diff --git a/src/Domain/Entity/Post.php b/src/Domain/Entity/Post.php
 new file mode 100644
-index 0000000..812b7cf
+index 0000000..37e1590
 --- /dev/null
 +++ b/src/Domain/Entity/Post.php
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,33 @@
 +<?php
++
++declare(strict_types=1);
 +
 +namespace App\Domain\Entity;
 +
@@ -78,6 +87,7 @@ index 0000000..812b7cf
 +    public Description $description;
 +    public Image $image;
 +    public Author $author;
++    public Category $category;
 +    public HtmlContent $content;
 +
 +    public function __construct(array $values)
@@ -87,6 +97,7 @@ index 0000000..812b7cf
 +        $this->description = new Description($values['description']);
 +        $this->image = new Image($values['image']['url'], $values['image']['alt']);
 +        $this->author = new Author($values['author']);
++        $this->category = new Category($values['category']);
 +        $this->content = new HtmlContent($values['content']);
 +    }
 +}
@@ -214,10 +225,10 @@ index 0000000..83d094f
 +}
 diff --git a/src/Domain/Value/Social.php b/src/Domain/Value/Social.php
 new file mode 100644
-index 0000000..ce1b9d2
+index 0000000..e19e76b
 --- /dev/null
 +++ b/src/Domain/Value/Social.php
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,14 @@
 +<?php
 +
 +declare(strict_types=1);
@@ -226,14 +237,10 @@ index 0000000..ce1b9d2
 +
 +final readonly class Social
 +{
-+    public string $icon;
-+    public string $name;
-+
 +    public function __construct(
-+        array $values,
++        public string $icon,
++        public string $name,
 +    ) {
-+        $this->icon =  $values['icon'];
-+        $this->name = $values['name'];
 +    }
 +}
 diff --git a/src/Domain/Value/Title.php b/src/Domain/Value/Title.php
