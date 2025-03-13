@@ -16,7 +16,7 @@ final class PostFactory extends ArrayFactory
         return [
             'id' => self::faker()->numberBetween(1),
             'title' => $title,
-            'slug' => (new AsciiSlugger())->slug($title)->toString(),
+            'slug' => sprintf('blog/%s', (new AsciiSlugger())->slug($title)->lower()->toString()),
             'description' => self::faker()->text(),
             'image' => [
                 'url' => sprintf('https://picsum.photos/seed/%d/640/480', self::faker()->randomNumber()),

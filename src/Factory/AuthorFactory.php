@@ -25,7 +25,7 @@ final class AuthorFactory extends ArrayFactory
         return [
             'id' => self::faker()->numberBetween(1),
             'name' => $name,
-            'slug' => (new AsciiSlugger())->slug($name)->toString(),
+            'slug' => sprintf('blog/authors/%s', (new AsciiSlugger())->slug($name)->lower()->toString()),
             'bio' => self::faker()->text(),
             'socials' => $socials,
         ];

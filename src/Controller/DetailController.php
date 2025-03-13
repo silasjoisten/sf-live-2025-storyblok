@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DetailController extends AbstractController
 {
     #[Route(
-        path: '/posts/{slug}',
+        path: '/{slug}',
         name: 'post_detail',
         requirements: ['slug' => Slug::PATTERN],
         priority: -1000,

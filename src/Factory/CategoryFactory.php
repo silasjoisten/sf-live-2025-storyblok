@@ -16,7 +16,7 @@ final class CategoryFactory extends ArrayFactory
         return [
             'id' => self::faker()->numberBetween(1),
             'name' => $name,
-            'slug' => (new AsciiSlugger())->slug($name)->toString(),
+            'slug' => sprintf('blog/categories/%s', (new AsciiSlugger())->slug($name)->lower()->toString()),
             'title' => self::faker()->sentence(),
             'description' => self::faker()->text(),
         ];
