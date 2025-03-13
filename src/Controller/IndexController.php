@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Domain\Aggregate\PostCollection;
 use App\Domain\Entity\Post;
 use App\Factory\PostFactory;
 use Storyblok\Api\Domain\Value\Dto\Pagination;
@@ -41,7 +40,7 @@ final class IndexController extends AbstractController
 //        $posts = \array_map(static fn (array $post) => new Post($post), $response->stories);
 
         $posts = \array_slice(
-            \array_map(static fn (array $post) => new Post($post), PostFactory::createMany(24)),
+            \array_map(static fn (array $post) => new Post($post), PostFactory::createMany(12)),
             ($page - 1) * $limit,
             $limit
         );
