@@ -38,6 +38,31 @@ final class CategoryTest extends UnitTestCase
     /**
      * @test
      */
+    public function slug(): void
+    {
+        $values = CategoryFactory::createOne([
+            'slug' => $expected = self::faker()->slug(),
+        ]);
+
+        self::assertSame($expected, (new Category($values))->slug->value);
+    }
+
+    /**
+     * @test
+     */
+    public function slugKeyMustExist(): void
+    {
+        $values = CategoryFactory::createOne();
+        unset($values['slug']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Category($values);
+    }
+
+    /**
+     * @test
+     */
     public function name(): void
     {
         $values = CategoryFactory::createOne([

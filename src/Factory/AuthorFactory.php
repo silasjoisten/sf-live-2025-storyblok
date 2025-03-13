@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Zenstruck\Foundry\ArrayFactory;
 
 final class AuthorFactory extends ArrayFactory
@@ -19,11 +20,16 @@ final class AuthorFactory extends ArrayFactory
             ];
         }
 
+        $name = self::faker()->name();
+
         return [
             'id' => self::faker()->numberBetween(1),
-            'name' => self::faker()->name(),
+            'name' => $name,
+            'slug' => (new AsciiSlugger())->slug($name)->toString(),
             'bio' => self::faker()->text(),
             'socials' => $socials,
         ];
     }
+
+
 }

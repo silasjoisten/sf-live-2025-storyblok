@@ -26,17 +26,15 @@
 
     <div class="pagination">
         {% if (page - 1) < 1 %}
-            <span class="prev">Previous</span>
+            <span class="prev">← Previous</span>
         {% else %}
-            <a class="prev" href="{{ path('index', { page: page - 1}) }}">Previous</a>
+            <a class="prev" href="{{ path('index', { page: page - 1}) }}">← Previous</a>
         {% endif %}
 
         {% if (page + 1) > 2 %}
-            <span class="next">Next</span>
+            <span class="next">Next →</span>
         {% else %}
-            <a class="next" href="{{ path('index', { page: page + 1}) }}">
-                Next
-            </a>
+            <a class="next" href="{{ path('index', { page: page + 1}) }}">Next →</a>
         {% endif %}
     </div>
 {% endblock %}

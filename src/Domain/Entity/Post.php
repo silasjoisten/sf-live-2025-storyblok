@@ -8,12 +8,14 @@ use App\Domain\Value\Description;
 use App\Domain\Value\HtmlContent;
 use App\Domain\Value\Id\PostId;
 use App\Domain\Value\Image;
+use App\Domain\Value\Slug;
 use App\Domain\Value\Title;
 use Webmozart\Assert\Assert;
 
 final readonly class Post
 {
     public PostId $id;
+    public Slug $slug;
     public Title $title;
     public Description $description;
     public Image $image;
@@ -26,8 +28,11 @@ final readonly class Post
         Assert::keyExists($values, 'id');
         $this->id = new PostId($values['id']);
 
+        Assert::keyExists($values, 'slug');
+        $this->slug = new Slug($values['slug']);
+
         Assert::keyExists($values, 'title');
-        $this->title =  new Title($values['title']);
+        $this->title = new Title($values['title']);
 
         Assert::keyExists($values, 'description');
         $this->description = new Description($values['description']);

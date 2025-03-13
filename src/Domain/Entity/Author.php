@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Value\Id\AuthorId;
+use App\Domain\Value\Slug;
 use App\Domain\Value\Social;
 use Webmozart\Assert\Assert;
 
 final readonly class Author
 {
     public AuthorId $id;
+    public Slug $slug;
     public string $name;
     public string $bio;
     public array $socials;
@@ -18,10 +20,13 @@ final readonly class Author
     public function __construct(array $values)
     {
         Assert::keyExists($values, 'id');
-        $this->id =  new AuthorId($values['id']);
+        $this->id = new AuthorId($values['id']);
+
+        Assert::keyExists($values, 'slug');
+        $this->slug = new Slug($values['slug']);
 
         Assert::keyExists($values, 'name');
-        $this->name =  $values['name'];
+        $this->name = $values['name'];
 
         Assert::keyExists($values, 'bio');
         $this->bio = $values['bio'];

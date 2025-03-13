@@ -40,6 +40,31 @@ final class PostTest extends UnitTestCase
     /**
      * @test
      */
+    public function slug(): void
+    {
+        $values = PostFactory::createOne([
+            'slug' => $expected = self::faker()->slug(),
+        ]);
+
+        self::assertSame($expected, (new Post($values))->slug->value);
+    }
+
+    /**
+     * @test
+     */
+    public function slugKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['slug']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
     public function title(): void
     {
         $values = PostFactory::createOne([

@@ -38,6 +38,31 @@ final class AuthorTest extends UnitTestCase
     /**
      * @test
      */
+    public function slug(): void
+    {
+        $values = AuthorFactory::createOne([
+            'slug' => $expected = self::faker()->slug(),
+        ]);
+
+        self::assertSame($expected, (new Author($values))->slug->value);
+    }
+
+    /**
+     * @test
+     */
+    public function slugKeyMustExist(): void
+    {
+        $values = AuthorFactory::createOne();
+        unset($values['slug']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Author($values);
+    }
+
+    /**
+     * @test
+     */
     public function name(): void
     {
         $values = AuthorFactory::createOne([
