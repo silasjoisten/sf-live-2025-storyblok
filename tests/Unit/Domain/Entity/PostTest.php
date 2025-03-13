@@ -27,6 +27,19 @@ final class PostTest extends UnitTestCase
     /**
      * @test
      */
+    public function idKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['id']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
     public function title(): void
     {
         $values = PostFactory::createOne([
@@ -39,6 +52,19 @@ final class PostTest extends UnitTestCase
     /**
      * @test
      */
+    public function titleKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['title']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
     public function description(): void
     {
         $values = PostFactory::createOne([
@@ -46,6 +72,19 @@ final class PostTest extends UnitTestCase
         ]);
 
         self::assertSame($expected, (new Post($values))->description->value);
+    }
+
+    /**
+     * @test
+     */
+    public function descriptionKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['description']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
     }
 
     /**
@@ -66,6 +105,51 @@ final class PostTest extends UnitTestCase
     /**
      * @test
      */
+    public function imageKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['image']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
+    public function imageUrlKeyMustExist(): void
+    {
+        $values = PostFactory::createOne([
+            'image' => [
+                'alt' => self::faker()->sentence(),
+            ]
+        ]);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
+    public function imageAltKeyMustExist(): void
+    {
+        $values = PostFactory::createOne([
+            'image' => [
+                'url' => self::faker()->url(),
+            ]
+        ]);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
     public function author(): void
     {
         $values = PostFactory::createOne([
@@ -75,6 +159,19 @@ final class PostTest extends UnitTestCase
         ]);
 
         self::assertSame($expected, (new Post($values))->author->name);
+    }
+
+    /**
+     * @test
+     */
+    public function authorKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['author']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
     }
 
     /**
@@ -94,6 +191,19 @@ final class PostTest extends UnitTestCase
     /**
      * @test
      */
+    public function categoryKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['category']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
+    }
+
+    /**
+     * @test
+     */
     public function content(): void
     {
         $values = PostFactory::createOne([
@@ -101,5 +211,18 @@ final class PostTest extends UnitTestCase
         ]);
 
         self::assertSame($expected, (new Post($values))->content->value);
+    }
+
+    /**
+     * @test
+     */
+    public function contentKeyMustExist(): void
+    {
+        $values = PostFactory::createOne();
+        unset($values['content']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Post($values);
     }
 }

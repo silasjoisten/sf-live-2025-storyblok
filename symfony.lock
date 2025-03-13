@@ -40,6 +40,19 @@
             "tests/bootstrap.php"
         ]
     },
+    "storyblok/symfony-bundle": {
+        "version": "0.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.1",
+            "ref": "81d0325b8168ae0abe0c3e1ab1548ef8b9a77a85"
+        },
+        "files": [
+            "config/packages/storyblok.yaml",
+            "config/routes/storyblok.yaml"
+        ]
+    },
     "symfony/asset-mapper": {
         "version": "7.2",
         "recipe": {

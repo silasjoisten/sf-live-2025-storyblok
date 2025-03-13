@@ -25,6 +25,19 @@ final class CategoryTest extends UnitTestCase
     /**
      * @test
      */
+    public function idKeyMustExist(): void
+    {
+        $values = CategoryFactory::createOne();
+        unset($values['id']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Category($values);
+    }
+
+    /**
+     * @test
+     */
     public function name(): void
     {
         $values = CategoryFactory::createOne([
@@ -32,6 +45,19 @@ final class CategoryTest extends UnitTestCase
         ]);
 
         self::assertSame($expected, (new Category($values))->name);
+    }
+
+    /**
+     * @test
+     */
+    public function nameKeyMustExist(): void
+    {
+        $values = CategoryFactory::createOne();
+        unset($values['name']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Category($values);
     }
 
     /**
@@ -49,6 +75,19 @@ final class CategoryTest extends UnitTestCase
     /**
      * @test
      */
+    public function titleKeyMustExist(): void
+    {
+        $values = CategoryFactory::createOne();
+        unset($values['title']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Category($values);
+    }
+
+    /**
+     * @test
+     */
     public function description(): void
     {
         $values = CategoryFactory::createOne([
@@ -58,4 +97,16 @@ final class CategoryTest extends UnitTestCase
         self::assertSame($expected, (new Category($values))->description->value);
     }
 
+    /**
+     * @test
+     */
+    public function descriptionKeyMustExist(): void
+    {
+        $values = CategoryFactory::createOne();
+        unset($values['description']);
+
+        self::expectException(\InvalidArgumentException::class);
+
+        new Category($values);
+    }
 }

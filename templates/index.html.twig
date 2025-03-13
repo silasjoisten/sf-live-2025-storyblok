@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to MyBlog{% endblock %}
+
+{% block body %}
+    <h1 class="page-title">Welcome to MyBlog</h1>
+
+    <div class="grid-list">
+        {% for post in posts %}
+            <article class="card">
+                <img class="card-img" src="{{ post.image.url }}" alt="{{ post.image.alt }}" />
+
+                <div class="card-content">
+                    <ul class="inline-list">
+                        <li>{{ post.author.name }}</li>
+                        <li>&centerdot;</li>
+                        <li>{{ post.category.name }}</li>
+                    </ul>
+
+                    <a href="{{ path('post_detail', { slug: post.id.value }) }}" class="card-title">{{ post.title.value }}</a>
+                    <p class="card-description">{{ post.description.value }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if (page - 1) < 1 %}
+            <span>Previous</span>
+        {% else %}
+            <a href="{{ path('index', { page: page - 1}) }}">Previous</a>
+        {% endif %}
+
+        <a href="{{ path('index', { page: page + 1}) }}">
+            Next
+        </a>
+    </div>
+{% endblock %}

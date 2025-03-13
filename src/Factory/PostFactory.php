@@ -15,7 +15,7 @@ final class PostFactory extends ArrayFactory
             'title' => self::faker()->sentence(),
             'description' => self::faker()->text(),
             'image' => [
-                'url' => self::faker()->url(),
+                'url' => sprintf('https://picsum.photos/seed/%d/640/480', self::faker()->randomNumber()),
                 'alt' => self::faker()->sentence(),
             ],
             'author' => AuthorFactory::createOne(),
