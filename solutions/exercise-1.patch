@@ -130,7 +130,7 @@ index 0000000..ea3cb91
 +}
 diff --git a/src/Domain/Value/Id/AuthorId.php b/src/Domain/Value/Id/AuthorId.php
 new file mode 100644
-index 0000000..f53d785
+index 0000000..94701c9
 --- /dev/null
 +++ b/src/Domain/Value/Id/AuthorId.php
 @@ -0,0 +1,9 @@
@@ -140,7 +140,7 @@ index 0000000..f53d785
 +
 +namespace App\Domain\Value\Id;
 +
-+final readonly class AuthorId
++final readonly class AuthorId extends Id
 +{
 +}
 diff --git a/src/Domain/Value/Id/CategoryId.php b/src/Domain/Value/Id/CategoryId.php
