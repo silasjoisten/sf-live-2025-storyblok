@@ -1,0 +1,585 @@
+diff --git a/src/Factory/AuthorFactory.php b/src/Factory/AuthorFactory.php
+new file mode 100644
+index 0000000..b8cd3ce
+--- /dev/null
++++ b/src/Factory/AuthorFactory.php
+@@ -0,0 +1,29 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Factory;
++
++use Zenstruck\Foundry\ArrayFactory;
++
++final class AuthorFactory extends ArrayFactory
++{
++    protected function defaults(): array
++    {
++        $socials = [];
++
++        for ($i = 1; $i <= self::faker()->numberBetween(1,3); $i++) {
++            $socials[] = [
++                'name' => self::faker()->sentence(),
++                'icon' => self::faker()->word(),
++            ];
++        }
++
++        return [
++            'id' => self::faker()->numberBetween(1),
++            'name' => self::faker()->name(),
++            'bio' => self::faker()->text(),
++            'socials' => $socials,
++        ];
++    }
++}
+\ No newline at end of file
+diff --git a/src/Factory/CategoryFactory.php b/src/Factory/CategoryFactory.php
+new file mode 100644
+index 0000000..5f523a9
+--- /dev/null
++++ b/src/Factory/CategoryFactory.php
+@@ -0,0 +1,20 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Factory;
++
++use Zenstruck\Foundry\ArrayFactory;
++
++final class CategoryFactory extends ArrayFactory
++{
++    protected function defaults(): array
++    {
++        return [
++            'id' => self::faker()->numberBetween(1),
++            'name' => self::faker()->word(),
++            'title' => self::faker()->sentence(),
++            'description' => self::faker()->text(),
++        ];
++    }
++}
+\ No newline at end of file
+diff --git a/src/Factory/PostFactory.php b/src/Factory/PostFactory.php
+new file mode 100644
+index 0000000..24a8cf5
+--- /dev/null
++++ b/src/Factory/PostFactory.php
+@@ -0,0 +1,26 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Factory;
++
++use Zenstruck\Foundry\ArrayFactory;
++
++final class PostFactory extends ArrayFactory
++{
++    protected function defaults(): array
++    {
++        return [
++            'id' => self::faker()->numberBetween(1),
++            'title' => self::faker()->sentence(),
++            'description' => self::faker()->text(),
++            'image' => [
++                'url' => self::faker()->url(),
++                'alt' => self::faker()->sentence(),
++            ],
++            'author' => AuthorFactory::createOne(),
++            'category' => CategoryFactory::createOne(),
++            'content' => self::faker()->randomHtml(),
++        ];
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Entity/AuthorTest.php b/tests/Unit/Domain/Entity/AuthorTest.php
+new file mode 100644
+index 0000000..5d3fea1
+--- /dev/null
++++ b/tests/Unit/Domain/Entity/AuthorTest.php
+@@ -0,0 +1,58 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Entity;
++
++use App\Domain\Entity\Author;
++use App\Factory\AuthorFactory;
++use App\Tests\Unit\UnitTestCase;
++
++final class AuthorTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function id(): void
++    {
++        $values = AuthorFactory::createOne([
++            'id' => $expected = self::faker()->numberBetween(1),
++        ]);
++
++        self::assertSame($expected, (new Author($values))->id->value);
++    }
++
++    /**
++     * @test
++     */
++    public function name(): void
++    {
++        $values = AuthorFactory::createOne([
++            'name' => $expected = self::faker()->sentence(),
++        ]);
++
++        self::assertSame($expected, (new Author($values))->name);
++    }
++
++    /**
++     * @test
++     */
++    public function bio(): void
++    {
++        $values = AuthorFactory::createOne([
++            'bio' => $expected = self::faker()->text(),
++        ]);
++
++        self::assertSame($expected, (new Author($values))->bio);
++    }
++
++    /**
++     * @test
++     */
++    public function socials(): void
++    {
++        $values = AuthorFactory::createOne();
++
++        self::assertCount(\count($values['socials']), (new Author($values))->socials);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Entity/CategoryTest.php b/tests/Unit/Domain/Entity/CategoryTest.php
+new file mode 100644
+index 0000000..6f9faa6
+--- /dev/null
++++ b/tests/Unit/Domain/Entity/CategoryTest.php
+@@ -0,0 +1,61 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Entity;
++
++use App\Domain\Entity\Category;
++use App\Factory\CategoryFactory;
++use App\Tests\Unit\UnitTestCase;
++
++final class CategoryTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function id(): void
++    {
++        $values = CategoryFactory::createOne([
++            'id' => $expected = self::faker()->numberBetween(1),
++        ]);
++
++        self::assertSame($expected, (new Category($values))->id->value);
++    }
++
++    /**
++     * @test
++     */
++    public function name(): void
++    {
++        $values = CategoryFactory::createOne([
++            'name' => $expected = self::faker()->sentence(),
++        ]);
++
++        self::assertSame($expected, (new Category($values))->name);
++    }
++
++    /**
++     * @test
++     */
++    public function title(): void
++    {
++        $values = CategoryFactory::createOne([
++            'title' => $expected = self::faker()->sentence(),
++        ]);
++
++        self::assertSame($expected, (new Category($values))->title->value);
++    }
++
++    /**
++     * @test
++     */
++    public function description(): void
++    {
++        $values = CategoryFactory::createOne([
++            'description' => $expected = self::faker()->text(),
++        ]);
++
++        self::assertSame($expected, (new Category($values))->description->value);
++    }
++
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Entity/PostTest.php b/tests/Unit/Domain/Entity/PostTest.php
+new file mode 100644
+index 0000000..a30be3f
+--- /dev/null
++++ b/tests/Unit/Domain/Entity/PostTest.php
+@@ -0,0 +1,105 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Entity;
++
++use App\Domain\Entity\Post;
++use App\Factory\AuthorFactory;
++use App\Factory\CategoryFactory;
++use App\Factory\PostFactory;
++use App\Tests\Unit\UnitTestCase;
++
++final class PostTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function id(): void
++    {
++        $values = PostFactory::createOne([
++            'id' => $expected = self::faker()->numberBetween(1),
++        ]);
++
++        self::assertSame($expected, (new Post($values))->id->value);
++    }
++
++    /**
++     * @test
++     */
++    public function title(): void
++    {
++        $values = PostFactory::createOne([
++            'title' => $expected = self::faker()->sentence(),
++        ]);
++
++        self::assertSame($expected, (new Post($values))->title->value);
++    }
++
++    /**
++     * @test
++     */
++    public function description(): void
++    {
++        $values = PostFactory::createOne([
++            'description' => $expected = self::faker()->text(),
++        ]);
++
++        self::assertSame($expected, (new Post($values))->description->value);
++    }
++
++    /**
++     * @test
++     */
++    public function image(): void
++    {
++        $values = PostFactory::createOne([
++            'image' => [
++                'url' => $expected = self::faker()->url(),
++                'alt' => self::faker()->sentence(),
++            ]
++        ]);
++
++        self::assertSame($expected, (new Post($values))->image->url);
++    }
++
++    /**
++     * @test
++     */
++    public function author(): void
++    {
++        $values = PostFactory::createOne([
++            'author' => AuthorFactory::createOne([
++                'name' => $expected = self::faker()->name(),
++            ]),
++        ]);
++
++        self::assertSame($expected, (new Post($values))->author->name);
++    }
++
++    /**
++     * @test
++     */
++    public function category(): void
++    {
++        $values = PostFactory::createOne([
++            'category' => CategoryFactory::createOne([
++                'name' => $expected = self::faker()->name(),
++            ]),
++        ]);
++
++        self::assertSame($expected, (new Post($values))->category->name);
++    }
++
++    /**
++     * @test
++     */
++    public function content(): void
++    {
++        $values = PostFactory::createOne([
++            'content' => $expected = self::faker()->randomHtml(),
++        ]);
++
++        self::assertSame($expected, (new Post($values))->content->value);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/DescriptionTest.php b/tests/Unit/Domain/Value/DescriptionTest.php
+new file mode 100644
+index 0000000..18da8e9
+--- /dev/null
++++ b/tests/Unit/Domain/Value/DescriptionTest.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value;
++
++use App\Domain\Value\Description;
++use App\Tests\Unit\UnitTestCase;
++
++final class DescriptionTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function value(): void
++    {
++        $expected = self::faker()->text();
++
++        self::assertSame($expected, (new Description($expected))->value);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/HtmlContentTest.php b/tests/Unit/Domain/Value/HtmlContentTest.php
+new file mode 100644
+index 0000000..e771f5d
+--- /dev/null
++++ b/tests/Unit/Domain/Value/HtmlContentTest.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value;
++
++use App\Domain\Value\HtmlContent;
++use App\Tests\Unit\UnitTestCase;
++
++final class HtmlContentTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function value(): void
++    {
++        $expected = self::faker()->randomHtml();
++
++        self::assertSame($expected, (new HtmlContent($expected))->value);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/Id/AuthorIdTest.php b/tests/Unit/Domain/Value/Id/AuthorIdTest.php
+new file mode 100644
+index 0000000..4293105
+--- /dev/null
++++ b/tests/Unit/Domain/Value/Id/AuthorIdTest.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value\Id;
++
++use App\Domain\Value\Id\AuthorId;
++use App\Tests\Unit\UnitTestCase;
++
++final class AuthorIdTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function value(): void
++    {
++        $expected = self::faker()->numberBetween(1);
++
++        self::assertSame($expected, (new AuthorId($expected))->value);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/Id/CategoryIdTest.php b/tests/Unit/Domain/Value/Id/CategoryIdTest.php
+new file mode 100644
+index 0000000..90d14e3
+--- /dev/null
++++ b/tests/Unit/Domain/Value/Id/CategoryIdTest.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value\Id;
++
++use App\Domain\Value\Id\CategoryId;
++use App\Tests\Unit\UnitTestCase;
++
++final class CategoryIdTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function value(): void
++    {
++        $expected = self::faker()->numberBetween(1);
++
++        self::assertSame($expected, (new CategoryId($expected))->value);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/Id/PostIdTest.php b/tests/Unit/Domain/Value/Id/PostIdTest.php
+new file mode 100644
+index 0000000..4d9365b
+--- /dev/null
++++ b/tests/Unit/Domain/Value/Id/PostIdTest.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value\Id;
++
++use App\Domain\Value\Id\PostId;
++use App\Tests\Unit\UnitTestCase;
++
++final class PostIdTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function value(): void
++    {
++        $expected = self::faker()->numberBetween(1);
++
++        self::assertSame($expected, (new PostId($expected))->value);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/ImageTest.php b/tests/Unit/Domain/Value/ImageTest.php
+new file mode 100644
+index 0000000..4f45b98
+--- /dev/null
++++ b/tests/Unit/Domain/Value/ImageTest.php
+@@ -0,0 +1,31 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value;
++
++use App\Domain\Value\Image;
++use App\Tests\Unit\UnitTestCase;
++
++final class ImageTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function url(): void
++    {
++        $expected = self::faker()->url();
++
++        self::assertSame($expected, (new Image($expected, self::faker()->sentence()))->url);
++    }
++
++    /**
++     * @test
++     */
++    public function alt(): void
++    {
++        $expected = self::faker()->sentence();
++
++        self::assertSame($expected, (new Image(self::faker()->url(), $expected))->alt);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/SocialTest.php b/tests/Unit/Domain/Value/SocialTest.php
+new file mode 100644
+index 0000000..4176bc0
+--- /dev/null
++++ b/tests/Unit/Domain/Value/SocialTest.php
+@@ -0,0 +1,31 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value;
++
++use App\Domain\Value\Social;
++use App\Tests\Unit\UnitTestCase;
++
++final class SocialTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function icon(): void
++    {
++        $expected = self::faker()->word();
++
++        self::assertSame($expected, (new Social($expected, self::faker()->sentence()))->icon);
++    }
++
++    /**
++     * @test
++     */
++    public function name(): void
++    {
++        $expected = self::faker()->sentence();
++
++        self::assertSame($expected, (new Social(self::faker()->word(), $expected))->name);
++    }
++}
+\ No newline at end of file
+diff --git a/tests/Unit/Domain/Value/TitleTest.php b/tests/Unit/Domain/Value/TitleTest.php
+new file mode 100644
+index 0000000..3996105
+--- /dev/null
++++ b/tests/Unit/Domain/Value/TitleTest.php
+@@ -0,0 +1,21 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Unit\Domain\Value;
++
++use App\Domain\Value\Title;
++use App\Tests\Unit\UnitTestCase;
++
++final class TitleTest extends UnitTestCase
++{
++    /**
++     * @test
++     */
++    public function value(): void
++    {
++        $expected = self::faker()->sentence();
++
++        self::assertSame($expected, (new Title($expected))->value);
++    }
++}
+\ No newline at end of file
