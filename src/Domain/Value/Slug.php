@@ -15,7 +15,7 @@ final readonly class Slug
      *  (?:\/[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*)*\/? → Allows slashes for hierarchical paths
      *  Trailing slash (\/?) → Optional to allow both /slug and /slug/.
      */
-    private const string PATTERN = '([\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*(?:\/[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*)*\/?)$';
+    public const string PATTERN = '([\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*(?:\/[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*)*\/?)$';
 
     public function __construct(
         public string $value,
