@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Domain\Entity\Category;
 use App\Domain\Entity\Post;
+use App\Factory\CategoryFactory;
 use App\Factory\PostFactory;
 use Storyblok\Api\Domain\Value\Dto\Pagination;
 use Storyblok\Api\Domain\Value\Resolver\Relation;
@@ -23,10 +25,12 @@ final class IndexController extends AbstractController
 //    ) {
 //    }
 
-    #[Route('/', name: 'index')]
+    #[Route(
+        path: '/', name: 'index')]
     public function index(
         #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter] int $limit = 8
+        #[MapQueryParameter] int $limit = 8,
+        #[MapQueryParameter] ?string $category = null
     ): Response {
 
 //        $response = $this->stories->allByContentType('post', new StoriesRequest(
@@ -39,6 +43,8 @@ final class IndexController extends AbstractController
 //
 //        $posts = \array_map(static fn (array $post) => new Post($post), $response->stories);
 
+        $categories = \array_map(static fn (array $category) => new Category($category), CategoryFactory::createMany(6));
+
         $posts = \array_slice(
             \array_map(static fn (array $post) => new Post($post), PostFactory::createMany(12)),
             ($page - 1) * $limit,
@@ -47,6 +53,7 @@ final class IndexController extends AbstractController
 
         return $this->render('index.html.twig', [
             'posts' => $posts,
+            'categories' => $categories,
             'page' => $page,
         ]);
     }

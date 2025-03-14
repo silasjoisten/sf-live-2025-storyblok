@@ -30,6 +30,4 @@ final class AuthorFactory extends ArrayFactory
             'socials' => $socials,
         ];
     }
-
-
 }

@@ -14,7 +14,7 @@ final class DetailController extends AbstractController
 {
     #[Route(
         path: '/{slug}',
-        name: 'post_detail',
+        name: 'detail',
         requirements: ['slug' => Slug::PATTERN],
         priority: -1000,
     )]

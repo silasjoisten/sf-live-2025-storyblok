@@ -225,3 +225,30 @@ body {
     background: #0056b3;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Category List */
+.category-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Category Badge */
+.category-badge {
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+    background: #007bff;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-badge:hover {
+    background: #0056b3;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
