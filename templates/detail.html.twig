@@ -16,12 +16,12 @@
             </ul>
         </div>
 
-        <img class="post-image" src="{{ post.image.url }}" alt="{{ post.image.alt }}" />
+        <img class="post-image opacity-0" onload="this.classList.add('opacity-100')" src="{{ post.image.url }}" alt="{{ post.image.alt }}" />
 
         <p class="post-description">{{ post.description }}</p>
 
         <div class="post-content">
-            {{ post.content|raw }}
+{#            {{ post.content|rich_text|raw }}#}
         </div>
 
         <!-- Back to List Button -->

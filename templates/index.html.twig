@@ -5,19 +5,19 @@
 {% block body %}
     <h1 class="page-title">Welcome to MyBlog in {{ app.locale }}</h1>
 
-    <div class="category-list">
-            <a href="{{ path('index') }}" class="category-badge">All</a>
-        {% for category in categories %}
-            <a href="{{ path('index', { category: category.slug.value }) }}" class="category-badge">
-                {{ category.name }}
-            </a>
-        {% endfor %}
-    </div>
+{#    <div class="category-list">#}
+{#            <a href="{{ path('index') }}" class="category-badge">All</a>#}
+{#        {% for category in categories %}#}
+{#            <a href="{{ path('index', { category: category.slug.value }) }}" class="category-badge">#}
+{#                {{ category.name }}#}
+{#            </a>#}
+{#        {% endfor %}#}
+{#    </div>#}
 
     <div class="grid-list">
         {% for post in posts %}
             <article class="card">
-                <img class="card-img" src="{{ post.image.url }}" alt="{{ post.image.alt }}" />
+                <img class="card-img opacity-0" onload="this.classList.add('opacity-100')" src="{{ post.image.url }}" alt="{{ post.image.alt }}" />
 
                 <div class="card-content">
                     <ul class="inline-list">
