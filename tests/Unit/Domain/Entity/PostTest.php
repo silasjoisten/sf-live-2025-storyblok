@@ -232,10 +232,10 @@ final class PostTest extends UnitTestCase
     public function content(): void
     {
         $values = PostFactory::createOne([
-            'content' => $expected = self::faker()->randomHtml(),
+            'content' => $expected = self::richText(),
         ]);
 
-        self::assertSame($expected, (new Post($values))->content->value);
+        self::assertSame($expected, (new Post($values))->content->values);
     }
 
     /**

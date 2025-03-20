@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DetailController extends AbstractController
 {
     #[Route(
-        path: '/{slug}',
+        path: ['/{slug}'],
         name: 'detail',
         requirements: ['slug' => Slug::PATTERN],
-        priority: -1000,
+        priority: -1000000,
     )]
     public function index(string $slug): Response
     {

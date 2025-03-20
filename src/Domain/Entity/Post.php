@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Value\Description;
-use App\Domain\Value\HtmlContent;
+use App\Domain\Value\RichText;
 use App\Domain\Value\Id\PostId;
 use App\Domain\Value\Image;
 use App\Domain\Value\Slug;
@@ -21,7 +21,7 @@ final readonly class Post
     public Image $image;
     public Author $author;
     public Category $category;
-    public HtmlContent $content;
+    public RichText $content;
 
     public function __construct(array $values)
     {
@@ -49,6 +49,6 @@ final readonly class Post
         $this->category = new Category($values['category']);
 
         Assert::keyExists($values, 'content');
-        $this->content = new HtmlContent($values['content']);
+        $this->content = new RichText($values['content']);
     }
 }

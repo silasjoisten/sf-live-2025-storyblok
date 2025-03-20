@@ -24,7 +24,20 @@ final class PostFactory extends ArrayFactory
             ],
             'author' => AuthorFactory::createOne(),
             'category' => CategoryFactory::createOne(),
-            'content' => self::faker()->randomHtml(),
+            'content' => [
+                'type' => 'doc',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'content' => [
+                            [
+                                'text' => self::faker()->sentence(),
+                                'type' => 'text'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
         ];
     }
 }
